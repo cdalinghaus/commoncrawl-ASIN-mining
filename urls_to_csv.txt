@@ -1,0 +1,16 @@
+import re
+import sys
+
+# This regex finds the TLD and ASIN/ISBN in one go.
+pattern = re.compile(r'amazon\.([a-z.]+)/.*(?:dp|gp/product)/([^/?]+)')
+
+with open(sys.argv[1], "r") as infile, open("output.csv", "w") as outfile:
+    for line in infile:
+        line = line.strip()
+        if not line:
+            continue
+        match = pattern.search(line)
+        if match:
+            tld = match.group(1)
+            asin = match.group(2)
+            outfile.write(f"{tld},{asin}\n")
